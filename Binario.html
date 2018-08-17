@@ -1,0 +1,108 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <canvas id="funcion" width="800" height="780" style=" border: 2px solid #000000"></canvas>
+        <script type="text/javascript">
+            var c;
+            var a;
+            var ctx = document.getElementById("funcion");
+            var lienzo = ctx.getContext('2d');
+            //Creacion de Ejes
+            function crearEjes(){
+                lienzo.moveTo(30, 0);
+                lienzo.lineWidth = 3;
+                lienzo.strokeStyle = 'blue';
+                lienzo.lineTo(30, 750);
+                lienzo.lineTo(800, 750);
+                lienzo.stroke();   
+            }                  
+            
+            
+            function crearArray(tam){
+                a=new Array(tam);
+                for (i=0;i<tam;i++){
+                    a[i] = Math.floor((Math.random()*100)+1);	 
+                }
+            }
+            
+            function Binario (key,izq,der){
+                x=parseInt((izq+der)/2);
+                c+=1;
+                if(der<izq){
+                    c+=1;
+                    return -1;
+                }
+                c+=2;
+                if(key<a[x]){
+                    c+=3;
+                    der=x-1;
+                    return Binario(key,izq,der);
+                }
+                else{
+                    c+=2;
+                    if(key>a[x]){
+                        c+=3;
+                        izq=x+1;
+                        return Binario(key,izq,der);
+                        
+                    }
+                    c+=1;
+                   /* else{
+                        return x;
+                    }*/
+                }
+                
+            }
+            
+            function Insercion(){	
+                for(i=1;i<a.length;i++){
+                    temp=a[i];
+                    j=i-1;      
+                    while(j>=0&&a[j]>temp){
+                        a[j+1]=a[j];
+                        j--;		 
+                    }
+                a[j+1]=temp;
+                }
+            }
+            
+            function graficaFuncion() {
+                lienzo.beginPath();
+                lienzo.font = "bold 25px sans-serif";
+                lienzo.fillStyle = '#000000';
+                lienzo.strokeStyle = '#9E6D00';
+
+                for (i = 5; i < 11; i++) {
+                    corX = (i - 5) / 1.23 * 160 + 30;
+                    corY = 13 * i * i * i + 7 * i * i + 4 * i + 12;
+                    corY = 750 - corY / 17.37;
+                    if (i == 5)
+                        lienzo.moveTo(corX, corY);
+                    else
+                        lienzo.lineTo(corX, corY);
+                    lienzo.fillText('.', corX, corY);
+                    lienzo.stroke();
+                }
+            }
+            function general(){
+                c = 0;
+                crearEjes();
+                lienzo.font = "bold 25px sans-serif";
+                lienzo.fillStyle = '#000000';
+                for(i=2;i<100;i++){
+                    crearArray(i);
+                    Insercion();
+                    Binario((Math.floor(Math.random()*100)+1),0,a.length);
+                    corX = (i * 8) + 30;
+                    corY = 750 - c * 7;
+                    lienzo.fillText('.', corX, corY);
+                    c = 0;
+                }
+                graficaFuncion();
+            }
+        </script>
+        <br>
+        <button onclick="general()">GENERAR</button>
+    </body>
+</html>
